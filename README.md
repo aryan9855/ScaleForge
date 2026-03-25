@@ -1,7 +1,7 @@
 # <h1 align="center">🏗 ScaleForge</h1>
 
 <p align="center">
-  A Professional AI-Powered System Design Interview Simulator (MERN + Groq)
+  A Professional AI-Powered System Design Interview Simulator (MERN + Advanced LLM)
 </p>
 
 <p align="center">
