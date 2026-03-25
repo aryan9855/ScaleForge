@@ -121,7 +121,7 @@ npm run dev
   <img src="screenshorts/history.png" width="800" />
 </p>
 
-### 🕒 result
+### 🕒 Result
 <p align="center">
   <img src="screenshorts/result.png" width="800" />
 </p>
