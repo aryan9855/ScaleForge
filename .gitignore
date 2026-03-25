@@ -1,0 +1,44 @@
+# Dependencies
+node_modules/
+**/node_modules/
+package-lock.json.log
+
+# Environment Variables (CRITICAL: Never push these)
+.env
+.env.local
+.env.*
+**/.env
+**/.env.local
+**/.env.*
+
+# Build Artifacts
+dist/
+**/dist/
+build/
+bin/
+obj/
+
+# Logs
+*.log
+**/logs/
+backend/error.log
+frontend/frontend.log
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.swp
+
+# Temporary & AI Files
+tmp/
+temp/
+.temp/
+.cache/
+.gemini/
+.antigravity/

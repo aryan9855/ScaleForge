@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@theme {
+  --color-indigo-50: #fff5f2;
+  --color-indigo-100: #ffe8e1;
+  --color-indigo-200: #ffd1c3;
+  --color-indigo-300: #ffaf9b;
+  --color-indigo-400: #ff8562;
+  --color-indigo-500: #ef7f5a;
+  --color-indigo-600: #ef7f5a; /* This is the primary! */
+  --color-indigo-700: #d66442;
+  --color-indigo-800: #b15136;
+  --color-indigo-900: #934631;
+}
+
+:root {
+  background-color: #f8fafc;
+  color: #1e293b;
+}
+
+body {
+  margin: 0;
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
