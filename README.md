@@ -101,24 +101,29 @@ npm run dev
 
 ## 📸 Screenshots
 
-### 🏠 Dashboard
+### 🏠 Login
+<p align="center">
+  <img src="screenshorts/login.png" width="800" />
+</p>
+
+### 🧠 Dashboard
 <p align="center">
   <img src="screenshorts/dashboard.png" width="800" />
 </p>
 
-### 🧠 Interview Session
+### 📊 Interview Session
 <p align="center">
   <img src="screenshorts/interview.png" width="800" />
-</p>
-
-### 📊 AI Evaluation
-<p align="center">
-  <img src="screenshorts/feedback.png" width="800" />
 </p>
 
 ### 🕒 History & Progress
 <p align="center">
   <img src="screenshorts/history.png" width="800" />
+</p>
+
+### 🕒 result
+<p align="center">
+  <img src="screenshorts/result.png" width="800" />
 </p>
 
 ---
