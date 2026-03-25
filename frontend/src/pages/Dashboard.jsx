@@ -58,7 +58,7 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <header className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-        <h1 className="text-3xl font-bold text-slate-900">Hello, {user?.name}! 👋</h1>
+        <h1 className="text-3xl font-bold text-slate-900">Hello, {user?.name}!</h1>
         <p className="text-slate-500 mt-2">Ready to master System Design with ScaleForge? Start a new interview or review your progress.</p>
       </header>
 
