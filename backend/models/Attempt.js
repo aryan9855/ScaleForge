@@ -28,6 +28,8 @@ const attemptSchema = mongoose.Schema(
   }
 );
 
+attemptSchema.index({ user: 1, createdAt: -1 });
+
 const Attempt = mongoose.model('Attempt', attemptSchema);
 
 module.exports = Attempt;

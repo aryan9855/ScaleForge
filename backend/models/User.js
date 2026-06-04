@@ -11,6 +11,8 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      lowercase: true,
+      trim: true,
     },
     password: {
       type: String,
@@ -22,6 +24,8 @@ const userSchema = mongoose.Schema(
   }
 );
 
+userSchema.index({ email: 1 }, { unique: true });
+
 // Method to compare passwords
 userSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
@@ -30,7 +34,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
 // Pre-save hook to hash password
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {
-    next();
+    return next();
   }
 
   const salt = await bcrypt.genSalt(10);

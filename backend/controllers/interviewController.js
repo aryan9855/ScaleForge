@@ -78,9 +78,13 @@ const evaluateAnswer = async (req, res, next) => {
 // @access  Private
 const getHistory = async (req, res, next) => {
   try {
-    const attempts = await Attempt.find({ user: req.user._id }).sort({
-      createdAt: -1,
-    });
+    const query = Attempt.find({ user: req.user._id }).sort({ createdAt: -1 });
+
+    if (req.query.summary === 'true') {
+      query.select('question feedback.score feedback.strengths createdAt');
+    }
+
+    const attempts = await query.lean();
     res.json(attempts);
   } catch (error) {
     next(error);

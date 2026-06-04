@@ -5,7 +5,8 @@ const generateToken = require('../utils/generateToken');
 // @route   POST /api/v1/auth/register
 // @access  Public
 const registerUser = async (req, res, next) => {
-  const { name, email, password } = req.body;
+  const { name, password } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
 
   try {
     const userExists = await User.findOne({ email });
@@ -41,7 +42,8 @@ const registerUser = async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // @access  Public
 const loginUser = async (req, res, next) => {
-  const { email, password } = req.body;
+  const { password } = req.body;
+  const email = req.body.email?.trim().toLowerCase();
 
   try {
     const user = await User.findOne({ email });

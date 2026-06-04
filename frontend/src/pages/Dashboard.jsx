@@ -12,7 +12,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchHistory = async () => {
       try {
-        const { data } = await api.get('/interview/history');
+        const { data } = await api.get('/interview/history?summary=true');
         setHistory(data); // Store ALL history for total metrics
       } catch (err) {
         console.error(err);
