@@ -17,7 +17,7 @@
 
 ## 🚀 Overview
 
-ScaleForge is an immersive practice platform designed to help engineers master High-Level Architecture (HLA) and System Design interviews. Using advanced LLMs (Llama 3.3 70B via Groq), it provides:
+ScaleForge is an immersive practice platform designed to help engineers master High-Level Architecture (HLA) and System Design interviews. Using advanced LLMs (GPT-OSS 120B via Groq), it provides:
 
 - 🧠 **Dynamic Scenarios**: Challenging, industry-standard system design prompts.
 - 💬 **Intelligent Evaluation**: Instant, detailed feedback on your solutions.
@@ -38,7 +38,7 @@ ScaleForge is an immersive practice platform designed to help engineers master H
 ### ⚙ Backend
 - **Node.js & Express.js**
 - **MongoDB Atlas** (Database)
-- **Groq API** (Llama-3.3-70b-versatile)
+- **Groq API** (openai/gpt-oss-120b)
 - **JWT Authentication**
 - **Axios** (API Requests)
 
@@ -49,7 +49,7 @@ ScaleForge is an immersive practice platform designed to help engineers master H
 →  
 **API Gateway (Express)**  
 →  
-**Inference Engine (Groq / Llama 3.3)**  
+**Inference Engine (Groq / GPT-OSS 120B)**
 →  
 **Data Layer (MongoDB Atlas)**
 
