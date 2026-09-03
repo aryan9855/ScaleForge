@@ -140,6 +140,11 @@ Configure the required environment variables before starting the backend. See [d
   <img src="screenshorts/interview.png" width="800" />
 </p>
 
+### 🧠 LeaderBoard
+<p align="center">
+  <img src=leaderboard/result.png" width="800" />
+</p>
+
 ### 🕒 History & Progress
 <p align="center">
   <img src="screenshorts/history.png" width="800" />
