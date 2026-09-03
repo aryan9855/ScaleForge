@@ -1,10 +1,10 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { BrainCircuit, History, LayoutDashboard, LogOut, X, AlertTriangle } from 'lucide-react';
+import { BrainCircuit, History, LayoutDashboard, LogOut, Trophy, X, AlertTriangle } from 'lucide-react';
 
 const Navbar = () => {
-  const { user, logout } = useAuth();
+  const { user, isDemo, logout } = useAuth();
   const navigate = useNavigate();
   const [showLogoutModal, setShowLogoutModal] = useState(false);
 
@@ -14,7 +14,7 @@ const Navbar = () => {
     setShowLogoutModal(false);
   };
 
-  if (!user) return null;
+  if (!user && !isDemo) return null;
 
   return (
     <>
@@ -41,12 +41,16 @@ const Navbar = () => {
                 <History className="w-5 h-5" />
                 <span className="hidden md:inline">History</span>
               </Link>
+              <Link to="/leaderboard" className="flex items-center gap-1 text-slate-600 hover:text-indigo-600 font-medium text-sm">
+                <Trophy className="w-5 h-5" />
+                <span className="hidden md:inline">Leaderboard</span>
+              </Link>
               <button 
                 onClick={() => setShowLogoutModal(true)}
                 className="flex items-center gap-1 text-slate-600 hover:text-red-600 font-medium ml-4 text-sm"
               >
                 <LogOut className="w-5 h-5" />
-                <span>Logout</span>
+                <span>{isDemo ? 'Exit Demo' : 'Logout'}</span>
               </button>
             </div>
           </div>

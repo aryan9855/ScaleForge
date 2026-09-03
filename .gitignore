@@ -10,6 +10,8 @@ package-lock.json.log
 **/.env
 **/.env.local
 **/.env.*
+!.env.example
+!**/.env.example
 
 # Build Artifacts
 dist/

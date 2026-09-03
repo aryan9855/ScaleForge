@@ -2,14 +2,21 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
+import { getDemoAttempts } from '../services/demoStorage';
 import { BrainCircuit, History, Award, BookOpen, ArrowRight } from 'lucide-react';
 
 const Dashboard = () => {
-  const { user } = useAuth();
+  const { user, isDemo } = useAuth();
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (isDemo) {
+      setHistory(getDemoAttempts());
+      setLoading(false);
+      return;
+    }
+
     const fetchHistory = async () => {
       try {
         const { data } = await api.get('/interview/history?summary=true');
@@ -21,7 +28,7 @@ const Dashboard = () => {
       }
     };
     fetchHistory();
-  }, []);
+  }, [isDemo]);
 
   const averageScore = history.length > 0 
     ? (history.reduce((acc, curr) => acc + curr.feedback.score, 0) / history.length).toFixed(1)
@@ -58,8 +65,8 @@ const Dashboard = () => {
   return (
     <div className="space-y-8">
       <header className="bg-white p-8 rounded-2xl shadow-sm border border-slate-200">
-        <h1 className="text-3xl font-bold text-slate-900">Hello, {user?.name}!</h1>
-        <p className="text-slate-500 mt-2">Ready to master System Design with ScaleForge? Start a new interview or review your progress.</p>
+        <h1 className="text-3xl font-bold text-slate-900">{isDemo ? 'Demo Mode' : `Hello, ${user?.name}!`}</h1>
+        <p className="text-slate-500 mt-2">{isDemo ? 'Explore every ScaleForge feature. Demo interview results are temporary and are not saved.' : 'Ready to master System Design with ScaleForge? Start a new interview or review your progress.'}</p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

@@ -1,11 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
+import { addDemoAttempt } from '../services/demoStorage';
 import { BrainCircuit, Send, Loader2, Award, CheckCircle2, AlertCircle, Sparkles, Volume2, Mic, MicOff, Square } from 'lucide-react';
 
 const Interview = () => {
   const location = useLocation();
+  const { isDemo } = useAuth();
   const [question, setQuestion] = useState('');
+  const [sessionId, setSessionId] = useState(null);
+  const [round, setRound] = useState(1);
+  const [demoAnswers, setDemoAnswers] = useState([]);
   const [answer, setAnswer] = useState('');
   const [feedback, setFeedback] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -107,8 +113,11 @@ const Interview = () => {
     setError('');
     setFeedback(null);
     setAnswer('');
+    setDemoAnswers([]);
     try {
-      const { data } = await api.get('/interview/generate');
+      const { data } = await api.post(isDemo ? '/interview/demo/start' : '/interview/start');
+      setSessionId(data.sessionId);
+      setRound(data.currentRound);
       setQuestion(data.question);
     } catch (err) {
       setError(err.response?.data?.message || 'Failed to generate question');
@@ -122,11 +131,39 @@ const Interview = () => {
     e.preventDefault();
     if (isListening) stopListening();
     setEvaluating(true);
+    setError('');
     try {
-      const { data } = await api.post('/interview/evaluate', { question, answer });
+      const endpoint = isDemo ? `/interview/demo/${sessionId}/answer` : `/interview/${sessionId}/answer`;
+      const { data } = await api.post(endpoint, { answer });
+      if (isDemo) setDemoAnswers((previousAnswers) => [...previousAnswers, answer.trim()]);
+      setQuestion(data.question);
+      setRound(data.currentRound);
+      setAnswer('');
+    } catch (err) {
+      console.error(err);
+      setError(err.response?.data?.message || 'Failed to submit answer');
+    } finally {
+      setEvaluating(false);
+    }
+  };
+
+  const handleComplete = async () => {
+    setEvaluating(true);
+    setError('');
+    try {
+      const endpoint = isDemo ? `/interview/demo/${sessionId}/complete` : `/interview/${sessionId}/complete`;
+      const { data } = await api.post(endpoint);
+      if (isDemo) {
+        addDemoAttempt({
+          question,
+          userAnswer: [...demoAnswers, answer].filter(Boolean).join('\n\n'),
+          feedback: data.feedback,
+        });
+      }
       setFeedback(data.feedback);
     } catch (err) {
       console.error(err);
+      setError(err.response?.data?.message || 'Failed to complete interview');
     } finally {
       setEvaluating(false);
     }
@@ -141,7 +178,7 @@ const Interview = () => {
           </div>
           <h2 className="text-3xl font-bold text-slate-900">Welcome to ScaleForge</h2>
           <p className="text-slate-500 max-w-lg mx-auto">
-            Test your high-level architecture skills with professional AI scenarios.
+            {isDemo ? 'Try one interview free. Your demo data is temporary and will not appear in your history or leaderboard.' : 'Test your high-level architecture skills with a live AI interviewer.'}
           </p>
           
           {error && (
@@ -156,13 +193,16 @@ const Interview = () => {
             className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl font-bold text-lg shadow-lg flex items-center gap-2 mx-auto transition-all disabled:opacity-50"
           >
             {loading ? <Loader2 className="w-6 h-6 animate-spin" /> : <Sparkles className="w-6 h-6" />}
-            Generate Question
+            {isDemo ? 'Start Demo' : 'Generate Question'}
           </button>
         </div>
       ) : !feedback ? (
         <div className="bg-white rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
           <div className="bg-indigo-600 p-8 text-white relative group">
-            <h2 className="text-sm font-bold uppercase tracking-widest opacity-80 mb-2">Question</h2>
+            <div className="flex justify-between items-center mb-2">
+              <h2 className="text-sm font-bold uppercase tracking-widest opacity-80">Round {round}</h2>
+              <span className="text-xs font-bold uppercase tracking-widest opacity-70">Live session</span>
+            </div>
             <p className="text-2xl font-semibold leading-relaxed pr-12">{question}</p>
             <button 
               onClick={() => handleSpeak(question)}
@@ -196,10 +236,18 @@ const Interview = () => {
                 onChange={(e) => setAnswer(e.target.value)}
               />
             </div>
+            {error && <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-xl p-3">{error}</p>}
             <div className="flex justify-between items-center">
-              <button 
+              <div className="flex gap-3">
+              <button
                 type="button" 
-                onClick={() => setQuestion('')}
+                onClick={() => {
+                  setQuestion('');
+                  setSessionId(null);
+                  setRound(1);
+                  setAnswer('');
+                  setDemoAnswers([]);
+                }}
                 className="text-slate-500 hover:text-slate-700 font-medium"
               >
                 Reset
@@ -215,10 +263,12 @@ const Interview = () => {
                   </>
                 ) : (
                   <>
-                    Submit Solution <Send className="w-5 h-5" />
+                    Send Answer <Send className="w-5 h-5" />
                   </>
                 )}
               </button>
+              <button type="button" onClick={handleComplete} disabled={evaluating} className="px-6 py-4 bg-slate-900 hover:bg-slate-800 text-white rounded-2xl font-bold transition-all disabled:opacity-50">Finish</button>
+              </div>
             </div>
           </form>
         </div>

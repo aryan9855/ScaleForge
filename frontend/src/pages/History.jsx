@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
+import { getDemoAttempts } from '../services/demoStorage';
+import { useAuth } from '../context/AuthContext';
 import { History as HistoryIcon, Search, Calendar, Award, X, CheckCircle2, AlertCircle, RefreshCw } from 'lucide-react';
 
 const History = () => {
@@ -9,6 +11,7 @@ const History = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedItem, setSelectedItem] = useState(null);
   const navigate = useNavigate();
+  const { isDemo } = useAuth();
 
   const fetchHistory = async () => {
     try {
@@ -22,8 +25,13 @@ const History = () => {
   };
 
   useEffect(() => {
+    if (isDemo) {
+      setHistory(getDemoAttempts());
+      setLoading(false);
+      return;
+    }
     fetchHistory();
-  }, []);
+  }, [isDemo]);
 
   const handleRetry = (q) => {
     navigate('/interview', { state: { retryQuestion: q } });
@@ -38,7 +46,7 @@ const History = () => {
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold text-slate-900">Your Progress</h1>
-          <p className="text-slate-500">Track and review all your previous design sessions</p>
+          <p className="text-slate-500">{isDemo ? 'Demo history is not saved. Sign up to keep your interview results.' : 'Track and review all your previous design sessions'}</p>
         </div>
         
         <div className="relative w-full md:w-64">

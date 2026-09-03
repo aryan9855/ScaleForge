@@ -1,13 +1,19 @@
 const express = require('express');
+const http = require('http');
 const dotenv = require('dotenv');
 const cors = require('cors');
+const { Server } = require('socket.io');
 const path = require('path');
+
+dotenv.config();
+
 const connectDB = require('./config/db');
+const { connectRedis } = require('./config/redis');
 const { notFound, errorHandler } = require('./middlewares/errorMiddleware');
 const authRoutes = require('./routes/authRoutes');
 const interviewRoutes = require('./routes/interviewRoutes');
-
-dotenv.config();
+const leaderboardRoutes = require('./routes/leaderboardRoutes');
+const { initializeLeaderboardSocket } = require('./socket/leaderboard.socket');
 
 // Connect to Database
 connectDB();
@@ -33,6 +39,14 @@ app.get('/', (req, res) => {
 
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/interview', interviewRoutes);
+app.use('/api/v1/leaderboard', leaderboardRoutes);
+
+const server = http.createServer(app);
+const io = new Server(server, {
+  cors: corsOptions,
+});
+app.set('io', io);
+initializeLeaderboardSocket(io);
 
 // Serve Static Frontend for Production
 if (process.env.NODE_ENV === 'production') {
@@ -50,6 +64,14 @@ app.use(errorHandler);
 
 const PORT = process.env.PORT || 5000;
 
-app.listen(PORT, () => {
-  console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+const startServer = async () => {
+  await connectRedis();
+  server.listen(PORT, () => {
+    console.log(`Server running in ${process.env.NODE_ENV} mode on port ${PORT}`);
+  });
+};
+
+startServer().catch((error) => {
+  console.error(`Startup error: ${error.message}`);
+  process.exit(1);
 });
