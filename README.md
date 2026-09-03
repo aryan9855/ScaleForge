@@ -142,7 +142,7 @@ Configure the required environment variables before starting the backend. See [d
 
 ###  LeaderBoard
 <p align="center">
-  <img src=screenshorts/leaderboard.png" width="800" />
+  <img src="screenshorts/leaderboard.png" width="800" />
 </p>
 
 ### 🕒 History & Progress
